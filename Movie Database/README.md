@@ -1,3 +1,5 @@
+#MOVIE DATABASE 
+
 Sample Database: movie
 
 List of tables in the movie database:

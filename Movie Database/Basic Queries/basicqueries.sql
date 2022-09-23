@@ -87,4 +87,4 @@ ORDER BY mov_year;
 
 select act_id
 from actor
-where act_fname= 'Woody' AND act_lname = 'Allen';
+where act_fname= 'Woody' AND act_lname = 'Allen'; 

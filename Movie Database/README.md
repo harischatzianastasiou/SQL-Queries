@@ -1,11 +1,10 @@
 # MOVIE DATABASE 
 
-Sample Database: movie
+> Sample Database: movie
 
 List of tables in the movie database:
 
-actor
-genres
+actor  genres
 director
 movie
 movie_genres

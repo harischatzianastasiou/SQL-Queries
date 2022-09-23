@@ -2,7 +2,7 @@
 
 > Sample Database: movie
 
-**List of tables in the movie database:
+** List of tables in the movie database:
 
 > actor<br/> 
 > genres<br/>

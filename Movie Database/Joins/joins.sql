@@ -63,3 +63,10 @@ NATURAL JOIN genres
 GROUP BY dir_fname,dir_lname,gen_title
 ORDER BY dir_fname, dir_lname;
 
+--7. Write a SQL query to find the movies with year and genres. Return movie title, movie year and generic title.
+
+select mov_title, mov_year, gen_title 
+from movie 
+NATURAL JOIN movie_genres 
+NATURAL JOIN genres
+ORDER BY mov_title;

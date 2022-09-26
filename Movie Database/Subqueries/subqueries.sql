@@ -75,6 +75,11 @@ where mov_id in ( select mov_id from rating
                   where num_o_rating is null)
 OR mov_id NOT IN (select mov_id from rating);
 
+/*
+select mov_title 
+from movie 
+where NOT EXISTS(select mov_id from rating where movie.mov_id=rating.mov_id AND num_o_rating is not null);
+*/
 -- 8. Write a SQL query to find those reviewers who have not given a rating to certain films. Return reviewer name.
 
 select rev_name

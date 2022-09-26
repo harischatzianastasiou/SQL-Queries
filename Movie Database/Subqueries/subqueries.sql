@@ -37,36 +37,9 @@ where mov_rel_country != 'UK';
 -- 4.Write a SQL query to find the movies whose reviewer is unknown.
 --   Return movie title, year, release date, director first name, last name, actor first name, last name.
 
-
-/* 
-select *
-from 
-( 
-
-    select * 
-    from 
-    (
-        select * from movie
-        where mov_id in 
-        (
-            select mov_id from rating where rev_id in ( select rev_id from reviewer where rev_name is null)
-        )
-    ) x
-    join movie_cast ON movie_cast.mov_id = x.mov_id
-)y
-    
-join actor ON y.act_id = actor.act_id
-
-*/
-
-SELECT mov_title, mov_year, mov_dt_rel, dir_fname, dir_lname, 
-       act_fname, act_lname
-	   FROM movie a, movie_direction b, director c, 
-                rating d, reviewer e, actor f, movie_cast g
-	   where a.mov_id in 
-        (
-            select mov_id from rating where rev_id in ( select rev_id from reviewer where rev_name is null)
-        )
-    AND f.act_id = g.act_id
-    AND c.dir_id = b.dir_id;
- 
+SELECT mov_title, mov_year, mov_dt_rel, dir_fname, dir_lname, act_fname, act_lname
+FROM movie m JOIN actor a 
+ON (m.mov_id IN (select mov_id from rating where rev_id in ( select rev_id from reviewer where rev_name is null))
+    AND a.act_id IN (select act_id from movie_cast where mov_id in (m.mov_id)))
+JOIN director d 
+ON d.dir_id IN (select dir_id from movie_direction where mov_id in (m.mov_id));

@@ -43,3 +43,53 @@ ON (m.mov_id IN (select mov_id from rating where rev_id in ( select rev_id from 
     AND a.act_id IN (select act_id from movie_cast where mov_id in (m.mov_id)))
 JOIN director d 
 ON d.dir_id IN (select dir_id from movie_direction where mov_id in (m.mov_id));
+
+-- 5. Write a SQL query to find those movies directed by the director 
+--    whose first name is Woddy and last name is Allen. Return movie title
+
+select mov_title 
+from movie 
+where mov_id in ( select mov_id
+                  from movie_direction 
+                  where dir_id in (select dir_id 
+                                    from director
+                                    where dir_fname = 'Woody' AND dir_lname = 'Allen')
+                );
+                
+-- 6. Write a SQL query to determine those years in which there was at least one movie that received a rating of at least three stars.
+--    Sort the result-set in ascending order by movie year. Return movie year.
+
+select DISTINCT mov_year
+from movie 
+where mov_id in (select mov_id
+                 from rating
+                 where rev_stars >= 3);
+                 
+-- 7. Write a SQL query to search for movies that do not have any ratings. Return movie title.
+
+select distinct mov_title 
+from movie
+where mov_id in ( select mov_id from rating 
+                  where num_o_rating is null)
+OR mov_id NOT IN (select mov_id from rating);
+
+-- 8. Write a SQL query to find those reviewers who have not given a rating to certain films. Return reviewer name.
+
+select rev_name
+from reviewer 
+where rev_id IN (select rev_id from rating
+                 where rev_stars is null)
+OR rev_id NOT in ( select rev_id from rating);
+
+-- 9. Write a SQL query to find movies that have been reviewed by a reviewer and received a rating. 
+--    Sort the result-set in ascending order by reviewer name, movie title, review Stars. Return reviewer name, movie title, review Stars.
+
+select rev_name, mov_title, rev_stars 
+from rating INNER JOIN movie 
+ON movie.mov_id = rating.mov_id 
+    AND  num_o_rating is not null
+    AND rev_stars is not null
+JOIN reviewer
+ON reviewer.rev_id = rating.rev_id
+AND reviewer.rev_name is not null
+ORDER BY rev_name, mov_title, rev_stars;

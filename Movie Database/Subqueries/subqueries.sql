@@ -103,3 +103,62 @@ JOIN reviewer
 ON reviewer.rev_id = rating.rev_id
 AND reviewer.rev_name is not null
 ORDER BY rev_name, mov_title, rev_stars;
+
+-- 10. Write a SQL query to find movies that have been reviewed by a reviewer and received a rating. 
+--     Group the result set on reviewer’s name. Return reviewer’s name and number of reviews of every reviewer.
+
+select rev_name,count(*)
+from rating INNER JOIN movie 
+ON movie.mov_id = rating.mov_id 
+-- Here unlike 4. table rating is referncing to movie table with foreign key mov_id.
+    AND  num_o_rating is not null
+    AND rev_stars is not null
+JOIN reviewer
+ON reviewer.rev_id = rating.rev_id
+AND reviewer.rev_name is not null
+GROUP BY rev_name
+ORDER BY count(*) DESC;
+
+--  11. Write a SQL query to find those movies, which have received highest number of stars.
+--  Group the result set on movie title and sorts the result-set in ascending order by movie title.
+--  Return movie title and maximum number of review stars.
+
+select mov_title,max(rev_stars)
+from rating INNER JOIN movie
+ON rating.mov_id = movie.mov_id
+   AND rev_stars is not null 
+GROUP BY mov_title
+ORDER by mov_title;
+
+-- 12. Write a SQL query to find all reviewers who rated the movie 'American Beauty'. Return reviewer name.
+
+select rev_name
+from reviewer 
+where rev_id in (select rev_id from rating where mov_id in ( select mov_id from movie where mov_title = 'American Beauty'));
+
+-- 13. Write a SQL query to find the movies that have not been reviewed by any reviewer body other than 'Paul Monks'.
+--     Return movie title.
+
+select mov_title 
+from movie
+where mov_id in ( select mov_id from rating where rev_id NOT IN ( select rev_id from reviewer where rev_name = 'Paul Monks'))
+
+-- 14. From the following table, write a SQL query to find the movies with the lowest ratings. 
+--     Return reviewer name, movie title, and number of stars for those movies.
+
+select rev_name, mov_title, rev_stars
+from rating r INNER JOIN movie m
+ON r.mov_id = m.mov_id 
+AND rev_stars = ( select min(rev_stars) from rating ) 
+JOIN reviewer 
+ON reviewer.rev_id = r.rev_id
+AND rev_name IS NOT NULL;
+
+-- 15. Write a SQL query to find the movies directed by 'James Cameron'. Return movie title.
+
+select mov_title,dir_id
+from movie_direction INNER JOIN movie 
+ON movie_direction.mov_id = movie.mov_id
+JOIN director 
+ON movie_direction.dir_id = director.dir_id 
+AND dir_fname = 'James' AND dir_lname = 'Cameron';

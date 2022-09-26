@@ -41,6 +41,8 @@ SELECT mov_title, mov_year, mov_dt_rel, dir_fname, dir_lname, act_fname, act_lna
 FROM movie m JOIN actor a 
 ON (m.mov_id IN (select mov_id from rating where rev_id in ( select rev_id from reviewer where rev_name is null))
     AND a.act_id IN (select act_id from movie_cast where mov_id in (m.mov_id)))
+    -- Movie cast connects actor and movie table by referencing their primary keys(act_id and mov_id)
+    -- How to join tables that are not immediately connected 
 JOIN director d 
 ON d.dir_id IN (select dir_id from movie_direction where mov_id in (m.mov_id));
 
@@ -81,12 +83,15 @@ where rev_id IN (select rev_id from rating
                  where rev_stars is null)
 OR rev_id NOT in ( select rev_id from rating);
 
+-- Either have 0 num_of_rating OR have no entry in ratings table.MUST CHECK BOTH. 
+
 -- 9. Write a SQL query to find movies that have been reviewed by a reviewer and received a rating. 
 --    Sort the result-set in ascending order by reviewer name, movie title, review Stars. Return reviewer name, movie title, review Stars.
 
 select rev_name, mov_title, rev_stars 
 from rating INNER JOIN movie 
 ON movie.mov_id = rating.mov_id 
+-- Here unlike 4. table rating is referncing to movie table with foreign key mov_id.
     AND  num_o_rating is not null
     AND rev_stars is not null
 JOIN reviewer

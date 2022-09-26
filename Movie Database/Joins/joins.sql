@@ -50,3 +50,16 @@ select act_fname, act_lname
 from actor NATURAL JOIN movie_cast 
 NATURAL JOIN movie 
 WHERE mov_year not between 1990 AND 2000 ;
+
+-- 6. Write a SQL query to find the directors who have directed films in a variety of genres. 
+--    Group the result set on director first name, last name and generic title. 
+--    Sort the result-set in ascending order by director first name and last name.
+--    Return director first name, last name and number of genres movies.
+
+select dir_fname,dir_lname,gen_title,count(*)
+from director NATURAL JOIN movie_direction 
+NATURAL JOIN movie_genres 
+NATURAL JOIN genres 
+GROUP BY dir_fname,dir_lname,gen_title
+ORDER BY dir_fname, dir_lname;
+

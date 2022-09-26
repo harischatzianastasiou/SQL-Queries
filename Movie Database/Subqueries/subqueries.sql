@@ -156,9 +156,9 @@ AND rev_name IS NOT NULL;
 
 -- 15. Write a SQL query to find the movies directed by 'James Cameron'. Return movie title.
 
-select mov_title,dir_id
+select mov_title
 from movie_direction INNER JOIN movie 
 ON movie_direction.mov_id = movie.mov_id
-JOIN director 
-ON movie_direction.dir_id = director.dir_id 
+inner JOIN director 
+ON director.dir_id = movie_direction.dir_id 
 AND dir_fname = 'James' AND dir_lname = 'Cameron';

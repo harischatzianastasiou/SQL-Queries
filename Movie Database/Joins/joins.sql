@@ -34,3 +34,19 @@ from director d INNER JOIN movie m
 ON m.mov_id in (  select mov_id from movie where mov_title = 'Eyes Wide Shut')
 AND d.dir_id in ( select dir_id from movie_direction where mov_id = m.mov_id);
 */
+-- 4. Write a SQL query to find the director of a movie that cast a role as Sean Maguire. 
+--    Return director first name, last name and movie title.
+
+select dir_fname, dir_lname, mov_title
+from director NATURAL JOIN movie_direction 
+NATURAL JOIN movie_cast 
+NATURAL JOIN movie
+WHERE role = 'Sean Maguire';
+
+-- 5. Write a SQL query to find out which actors have not appeared in any movies between 1990 and 2000 (Begin and end values are included.).
+--    Return actor first name, last name, movie title and release year.
+
+select act_fname, act_lname
+from actor NATURAL JOIN movie_cast 
+NATURAL JOIN movie 
+WHERE mov_year not between 1990 AND 2000 ;

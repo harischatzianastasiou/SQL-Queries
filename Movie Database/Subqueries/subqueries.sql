@@ -162,3 +162,13 @@ ON movie_direction.mov_id = movie.mov_id
 inner JOIN director 
 ON director.dir_id = movie_direction.dir_id 
 AND dir_fname = 'James' AND dir_lname = 'Cameron';
+
+-- 16. Write a query in SQL to find the movies in which one or more actors appeared in more than one film.
+
+select mov_title
+from movie 
+where mov_id in ( select mov_id 
+                  from movie_cast 
+                  where act_id in( select act_id from movie_cast GROUP BY act_id HAVING count(act_id)>1 )
+                  --where act_id in (select act_id from( select act_id,count(*) from movie_cast group by act_id having count(*) >= 2 ))
+                );

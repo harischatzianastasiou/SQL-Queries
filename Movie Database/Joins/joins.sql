@@ -20,3 +20,17 @@ WHERE mov_title = 'Annie Hall';
 
 -- 3. From the following table, write a SQL query to find the director who directed a movie that 
 --    featured a role in 'Eyes Wide Shut'. Return director first name, last name and movie title.
+
+select *
+from director NATURAL JOIN movie_direction
+NATURAL JOIN movie
+NATURAL JOIN movie_cast 
+WHERE role IS  NOT NULL
+AND mov_title='Eyes Wide Shut';
+
+/*
+select dir_fname, dir_lname, mov_title 
+from director d INNER JOIN movie m 
+ON m.mov_id in (  select mov_id from movie where mov_title = 'Eyes Wide Shut')
+AND d.dir_id in ( select dir_id from movie_direction where mov_id = m.mov_id);
+*/

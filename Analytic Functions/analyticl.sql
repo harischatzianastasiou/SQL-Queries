@@ -45,3 +45,22 @@ select b.*,
        ) running_weight
 from   bricks b;
 select count(*) from bricks;
+
+-- 6. Partition By + Order By
+
+-- You can combine the partition by and order by clauses to get running totals within a group. 
+-- For example, the following splits the rows by colour. 
+-- It then gets the running count and weight of rows for each colour, sorted by brick_id:
+
+select b.*, 
+       count(*) over (
+         partition by colour
+         order by brick_id
+       ) running_total, 
+       sum ( weight ) over (
+         partition by colour
+         order by brick_id
+       ) running_weight
+from   bricks b;
+
+-- 7. Windowing Clause

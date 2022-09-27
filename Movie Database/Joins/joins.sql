@@ -97,3 +97,145 @@ NATURAL JOIN movie_genres
 NATURAL JOIN genres
 GROUP BY gen_title
 ORDER BY avg(mov_time) DESC;
+
+-- 11. Write a SQL query to find movies with the shortest duration. 
+--     Return movie title, movie year, director first name, last name, actor first name, last name and role.
+select mov_title, mov_year, dir_fname, dir_lname, act_fname, act_lname, role
+from movie 
+NATURAL JOIN movie_direction 
+NATURAL JOIN director
+NATURAL JOIN actor 
+NATURAL JOIN movie_cast
+WHERE mov_time = ( select min(mov_time) from movie );
+
+-- 12. Write a SQL query to find the years in which a movie received a rating of 3 or 4. 
+--     Sort the result in increasing order on movie year.
+
+select distinct mov_year 
+from movie
+NATURAL JOIN rating
+WHERE rev_stars = 3 OR rev_stars = 4
+ORDER BY mov_year;
+
+-- 13. Write a SQL query to get the reviewer name, movie title, and stars in an order that reviewer name will come first, 
+--     then by movie title, and lastly by number of stars.
+
+select rev_name, mov_title, rev_stars 
+from rating
+NATURAL JOIN reviewer
+NATURAL JOIN movie
+WHERE rev_name IS NOT NULL
+ORDER BY rev_name, mov_title, rev_stars; 
+
+-- 14. Write a SQL query to find those movies that have at least one rating and received the most stars. 
+--     Sort the result-set on movie title. Return movie title and maximum review stars.
+
+select mov_title, max(rev_stars)
+from movie
+INNER JOIN rating
+ON num_o_rating IS NOT NULL
+GROUP BY mov_title
+HAVING MAX(rev_stars)>0
+ORDER BY mov_title;
+
+-- 15.  Write a SQL query to find out which movies have received ratings. 
+--      Return movie title, director first name, director last name and review stars.
+
+select mov_title, dir_fname, dir_lname, rev_stars 
+from rating 
+NATURAL JOIN movie
+NATURAL JOIN movie_direction
+NATURAL JOIN director
+WHERE rev_stars IS NOT NULL; 
+
+-- 16. Write a SQL query to find movies in which one or more actors have acted in more than one film. 
+--     Return movie title, actor first and last name, and the role.
+
+select mov_title, act_fname, act_lname, role 
+from movie 
+NATURAL JOIN movie_cast
+NATURAL JOIN actor
+WHERE act_id in ( select act_id from movie_cast GROUP BY act_id HAVING count(act_id) > 1 );
+
+-- 17. Write a SQL query to find the actor whose first name is 'Claire' and last name is 'Danes'.
+--     Return director first name, last name, movie title, actor first name and last name, role.
+
+select dir_fname, dir_lname, mov_title, act_fname, act_lname, role
+from movie 
+NATURAL JOIN movie_direction 
+NATURAL JOIN director
+NATURAL JOIN actor 
+NATURAL JOIN movie_cast 
+WHERE act_fname = 'Claire' AND act_lname = 'Danes';
+
+-- 18. Write a SQL query to find for actors whose films have been directed by them. 
+--     Return actor first name, last name, movie title and role
+
+select act_fname, act_lname, mov_title, role ,dir_fname, dir_lname
+from actor
+NATURAL JOIN movie_cast
+NATURAL JOIN movie_direction
+NATURAL JOIN director 
+NATURAL JOIN movie
+WHERE act_fname = dir_fname AND act_lname = dir_lname;
+
+-- 19.  Write a SQL query to find the cast list of the movie ‘Chinatown’. Return first name, last name.
+
+select act_fname, act_lname
+from actor 
+NATURAL JOIN movie_cast
+NATURAL JOIN movie
+where mov_title = 'Chinatown';
+
+-- 20. Write a SQL query to find those movies where actor’s 
+--     first name is 'Harrison' and last name is 'Ford'. Return movie title.
+
+select mov_title 
+from movie
+NATURAL JOIN movie_cast
+NATURAL JOIN actor 
+WHERE act_fname = 'Harrison' AND act_lname = 'Ford';
+
+-- 21. Write a SQL query to find the highest-rated movies.
+--     Return movie title, movie year, review stars and releasing country.
+
+select mov_title, mov_year, rev_stars, mov_rel_country
+from movie
+NATURAL JOIN rating
+WHERE rev_stars = ( select max(rev_stars) from rating );
+
+-- 22. Write a SQL query to find the highest-rated ‘Mystery Movies’. Return the title, year, and rating.
+
+select mov_title, mov_year, rev_stars
+from movie
+NATURAL JOIN rating
+NATURAL JOIN movie_genres
+NATURAL JOIN genres
+WHERE rev_stars  = ( select max(rev_stars) from  genres NATURAL JOIN movie_genres NATURAL JOIN rating WHERE gen_title = 'Mystery');
+
+-- 23.  Write a SQL query to find the years when most of the ‘Mystery Movies’ produced.
+--      Count the number of generic title and compute their average rating. 
+--      Group the result set on movie release year, generic title. 
+--      Return movie year, generic title, number of generic title and average rating.
+
+select mov_year,gen_title,count(gen_title),avg(rev_stars)
+from movie 
+NATURAL JOIN movie_genres
+NATURAL JOIN genres
+NATURAL JOIN rating
+WHERE gen_title = 'Mystery'
+GROUP BY mov_year,gen_title;
+
+-- 24.  Write a query in SQL to generate a report, which contain the fields movie title, name of the female actor,
+--      year of the movie, role, movie genres, the director, date of release, and rating of that movie.
+
+select mov_title,act_fname,act_lname,mov_year,role,gen_title,dir_fname,dir_lname,mov_dt_rel,rev_stars 
+from movie 
+NATURAL JOIN movie_cast
+NATURAL JOIN movie_direction
+NATURAL JOIN director 
+NATURAL JOIN actor
+NATURAL JOIN rating
+NATURAL JOIN movie_genres
+NATURAL JOIN genres
+WHERE act_gender = 'F';

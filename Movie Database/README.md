@@ -19,3 +19,4 @@ Subqueries [ 16 exercises with solution] <br/>
 Joins [ 24 exercises with solution] <br/>
 
 https://www.w3resource.com/sql-exercises/movie-database-exercise/index.php
+ 

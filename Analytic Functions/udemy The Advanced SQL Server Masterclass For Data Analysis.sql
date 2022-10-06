@@ -1,4 +1,4 @@
---1. 
+--1. OVER(...)
 SELECT 
  B.FirstName,
  B.LastName,
@@ -15,7 +15,7 @@ FROM AdventureWorks2019.HumanResources.EmployeePayHistory A
 	JOIN AdventureWorks2019.HumanResources.Employee C
 		ON A.BusinessEntityID = C.BusinessEntityID
 
---2.
+--2. OVER(PARTITION BY ...)
 SELECT 
 A.Name ProductName,
 A.ListPrice,

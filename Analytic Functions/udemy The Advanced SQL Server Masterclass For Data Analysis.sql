@@ -31,20 +31,29 @@ FROM AdventureWorks2019.Production.Product A
 	INNER JOIN AdventureWorks2019.Production.ProductCategory C 
 		ON C.ProductCategoryID = B.ProductCategoryID;
 		
---3. ROW_NUMBER()
-SELECT 
-A.Name as "ProductName",
-A.ListPrice,
-B.Name as "ProductSubcategory",
-C.Name as "ProductCategory",
-PriceRank = ROW_NUMBER() OVER (ORDER BY ListPrice DESC),
-CategoryPriceRank = ROW_NUMBER() OVER( PARTITION BY C.Name ORDER BY ListPrice DESC),
-CASE WHEN ( ROW_NUMBER() OVER(PARTITION BY C.Name ORDER BY ListPrice DESC) BETWEEN 1 AND 5) THEN 'YES'
-		ELSE 'NO' END AS "Top 5 Price In Category"
+--3. ROW_NUMBER(),RANK(),DENSE_RANK()
 
-FROM AdventureWorks2019.Production.Product A
-		INNER JOIN AdventureWorks2019.Production.ProductSubcategory B
-				ON A.ProductSubcategoryID = B.ProductSubcategoryID
-		INNER JOIN AdventureWorks2019.Production.ProductCategory C
-				ON B.ProductCategoryID = C.ProductCategoryID
+SELECT 
+  ProductName = A.Name,
+  A.ListPrice,
+  ProductSubcategory = B.Name,
+  ProductCategory = C.Name,
+  [Price Rank] = ROW_NUMBER() OVER(ORDER BY A.ListPrice DESC),
+  [Category Price Rank] = ROW_NUMBER() OVER(PARTITION BY C.Name ORDER BY A.ListPrice DESC),
+  [Category Price Rank With Rank] = RANK() OVER(PARTITION BY C.Name ORDER BY A.ListPrice DESC),
+  [Category Price Rank With Dense Rank] = DENSE_RANK() OVER(PARTITION BY C.Name ORDER BY A.ListPrice DESC),
+  [Top 5 Price In Category] = 
+	CASE 
+		WHEN DENSE_RANK() OVER(PARTITION BY C.Name ORDER BY A.ListPrice DESC) <= 5 THEN 'Yes'
+		ELSE 'No'
+	END
+
+
+  FROM AdventureWorks2019.Production.Product A
+  JOIN AdventureWorks2019.Production.ProductSubcategory B
+  ON A.ProductSubcategoryID = B.ProductSubcategoryID
+  JOIN AdventureWorks2019.Production.ProductCategory C
+  ON B.ProductCategoryID = C.ProductCategoryID
+
+
 

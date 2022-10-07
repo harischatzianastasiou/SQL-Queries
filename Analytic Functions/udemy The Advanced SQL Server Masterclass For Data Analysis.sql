@@ -30,3 +30,21 @@ FROM AdventureWorks2019.Production.Product A
 		ON A.ProductSubcategoryID = B.ProductSubcategoryID
 	INNER JOIN AdventureWorks2019.Production.ProductCategory C 
 		ON C.ProductCategoryID = B.ProductCategoryID;
+		
+--3. ROW_NUMBER()
+SELECT 
+A.Name as "ProductName",
+A.ListPrice,
+B.Name as "ProductSubcategory",
+C.Name as "ProductCategory",
+PriceRank = ROW_NUMBER() OVER (ORDER BY ListPrice DESC),
+CategoryPriceRank = ROW_NUMBER() OVER( PARTITION BY C.Name ORDER BY ListPrice DESC),
+CASE WHEN ( ROW_NUMBER() OVER(PARTITION BY C.Name ORDER BY ListPrice DESC) BETWEEN 1 AND 5) THEN 'YES'
+		ELSE 'NO' END AS "Top 5 Price In Category"
+
+FROM AdventureWorks2019.Production.Product A
+		INNER JOIN AdventureWorks2019.Production.ProductSubcategory B
+				ON A.ProductSubcategoryID = B.ProductSubcategoryID
+		INNER JOIN AdventureWorks2019.Production.ProductCategory C
+				ON B.ProductCategoryID = C.ProductCategoryID
+

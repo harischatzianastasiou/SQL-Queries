@@ -202,3 +202,22 @@ SELECT
 		)
 
   FROM AdventureWorks2019.Production.ProductSubcategory A
+  
+  --PIVOT
+  SELECT
+*
+FROM
+(
+SELECT 
+JobTitle,
+VacationHours
+
+FROM AdventureWorks2019.HumanResources.Employee
+) A
+
+PIVOT(
+AVG(VacationHours)
+FOR JobTitle IN([Sales Representative],[Buyer],[Janitor])
+) B
+
+  

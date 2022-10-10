@@ -73,4 +73,26 @@ FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
 WHERE A.OrderDate >= '01-JAN-2013'
 AND A.TotalDue > 500;
 
+--5. Subqueries 
+--Write a query that displays the three most expensive orders, per vendor ID, from the Purchasing.PurchaseOrderHeader table.
+--Ultimately, you should see three distinct total due amounts (i.e., the top three) for each group of like Vendor Ids. However, there could be multiple records for each of these amounts.
+--"Most expensive" is defined by the amount in the "TotalDue" field.
+
+SELECT 
+*
+FROM
+(
+SELECT 
+	A.PurchaseOrderID,
+	A.VendorID,
+	A.OrderDate,
+	A.TaxAmt,
+	A.Freight,
+	A.TotalDue,
+	[Rank] = ROW_NUMBER() OVER(PARTITION BY A.VendorID ORDER BY A.TotalDue DESC),
+	DenseRank = DENSE_RANK() OVER(PARTITION BY A.VendorID ORDER BY A.TotalDue DESC)
+FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
+) B
+
+WHERE DenseRank <= 3; 
 

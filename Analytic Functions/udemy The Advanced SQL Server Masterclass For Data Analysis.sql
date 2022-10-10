@@ -114,10 +114,8 @@ VacationHoursPercent =
 					SELECT 
 					max(B.VacationHours) 
 					FROM AdventureWorks2019.HumanResources.Employee B
-					)  *100
-	
+					)  *100	
 FROM AdventureWorks2019.HumanResources.Employee A
-
 WHERE 
 (A.VacationHours *1.0)/(
 			SELECT 

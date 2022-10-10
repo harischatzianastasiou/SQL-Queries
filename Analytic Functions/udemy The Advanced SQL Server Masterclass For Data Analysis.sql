@@ -96,3 +96,32 @@ FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
 
 WHERE DenseRank <= 3; 
 
+-- Scalar Subqueries
+
+SELECT 
+
+A.BusinessEntityID,
+A.JobTitle,
+A.VacationHours,
+MaxVacationHours =
+	( 
+	SELECT
+	max(B.VacationHours) 
+	FROM AdventureWorks2019.HumanResources.Employee B
+	),
+VacationHoursPercent =
+		(A.VacationHours *1.0)/ (
+					SELECT 
+					max(B.VacationHours) 
+					FROM AdventureWorks2019.HumanResources.Employee B
+					)  *100
+	
+FROM AdventureWorks2019.HumanResources.Employee A
+
+WHERE 
+(A.VacationHours *1.0)/(
+			SELECT 
+			max(B.VacationHours) 
+			FROM AdventureWorks2019.HumanResources.Employee B
+			)  *100
+>=80

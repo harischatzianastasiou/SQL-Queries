@@ -54,6 +54,23 @@ SELECT
   ON A.ProductSubcategoryID = B.ProductSubcategoryID
   JOIN AdventureWorks2019.Production.ProductCategory C
   ON B.ProductCategoryID = C.ProductCategoryID
+  
+  --4. LAG() and LEAD()
 
+SELECT 
+	A.PurchaseOrderID,
+	A.OrderDate,
+	B.Name as "VendorName",
+	A.TotalDue,
+	PrevOrderFromVendorAmt = LAG(A.TotalDue,1) OVER(PARTITION BY A.VendorID ORDER BY A.OrderDate),
+	NextOrderByEmployeeVendor = LEAD(B.Name,1) OVER(PARTITION BY A.EmployeeID ORDER BY A.OrderDate),
+	Next2OrderByEmployeeVendor = LEAD(B.Name,2) OVER(PARTITION BY A.EmployeeID ORDER BY A.OrderDate)
+
+FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
+	INNER JOIN Purchasing.Vendor B 
+		ON A.VendorID = B.BusinessEntityID
+
+WHERE A.OrderDate >= '01-JAN-2013'
+AND A.TotalDue > 500;
 
 

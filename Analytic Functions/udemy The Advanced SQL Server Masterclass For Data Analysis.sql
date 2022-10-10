@@ -149,3 +149,36 @@ A.PurchaseOrderID
 )
 FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A;
 
+--EXISTS() , NOT EXISTS()
+
+SELECT 
+*
+FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
+
+WHERE EXISTS
+(
+	SELECT
+	1
+	FROM AdventureWorks2019.Purchasing.PurchaseOrderDetail B
+	WHERE A.PurchaseOrderID = B.PurchaseOrderID
+	AND B.OrderQty > 500
+	AND B.UnitPrice > 50
+)
+
+ORDER BY PurchaseOrderID;
+
+SELECT 
+*
+FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A
+
+WHERE NOT EXISTS
+(
+	SELECT
+	1
+	FROM AdventureWorks2019.Purchasing.PurchaseOrderDetail B
+	WHERE A.PurchaseOrderID = B.PurchaseOrderID
+	AND B.RejectedQty > 0
+)
+
+ORDER BY PurchaseOrderID;
+

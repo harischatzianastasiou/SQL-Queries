@@ -123,3 +123,29 @@ WHERE
 			FROM AdventureWorks2019.HumanResources.Employee B
 			)  *100
 >=80
+
+--Correlated Subqueries
+
+SELECT
+
+A.PurchaseOrderID
+,A.VendorID
+,A.OrderDate
+,A.TotalDue
+,NonRejectedItems = 
+(
+	SELECT
+	count(*)
+	FROM AdventureWorks2019.Purchasing.PurchaseOrderDetail B
+	WHERE A.PurchaseOrderID = B.PurchaseOrderID
+	AND B.RejectedQty =0 
+)
+,MostExpensiveItem = 
+(
+	SELECT
+	max(B.UnitPrice)
+	FROM AdventureWorks2019.Purchasing.PurchaseOrderDetail B
+	WHERE A.PurchaseOrderID = B.PurchaseOrderID
+)
+FROM AdventureWorks2019.Purchasing.PurchaseOrderHeader A;
+

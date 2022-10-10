@@ -182,3 +182,23 @@ WHERE NOT EXISTS
 
 ORDER BY PurchaseOrderID;
 
+-- FOR XML PATH WITH STUFF
+
+SELECT 
+       SubcategoryName = A.[Name]
+	  ,Products =
+		STUFF(
+			(
+				SELECT
+					';' + B.Name
+
+				FROM AdventureWorks2019.Production.Product B
+
+				WHERE A.ProductSubcategoryID = B.ProductSubcategoryID
+
+				FOR XML PATH('')
+
+			),1,1,''
+		)
+
+  FROM AdventureWorks2019.Production.ProductSubcategory A
